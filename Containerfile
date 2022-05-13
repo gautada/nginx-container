@@ -1,3 +1,4 @@
+ARG NGINX_VERSION=3.15.4
 FROM docker.io/gautada/alpine:$ALPINE_VERSION
 
 LABEL source="https://github.com/gautada/nginx-container.git"
@@ -10,7 +11,7 @@ WORKDIR /
 EXPOSE 80/tcp
 
 ARG NGINX_VERSION=1.20.2
-ARG NGINX_PACKAGE="$NGINX_VERSION"-r1
+ARG NGINX_PACKAGE="$NGINX_VERSION"-r2
 RUN /sbin/apk add --no-cache nginx=$NGINX_PACKAGE
 
 ARG USER=nginx
