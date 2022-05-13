@@ -1,0 +1,29 @@
+kind: pipeline
+type: exec
+name: Container Build - Nginx
+
+platform:
+  os: linux
+  arch: arm64
+
+steps:
+- name: build
+  environment:
+    ALPINE_VERSION: 3.15.4
+    NGINX_VERSION: 1.20.2
+  commands:
+  - podman build --build-arg ALPINE_VERSION=$ALPINE_VERSION --build-arg NGINX_VERSION=$NGINX_VERSION --file Containerfile --label revision="$(git rev-parse HEAD)" --label version="$(date +%Y.%m.%d)" --no-cache --tag nginx:build .
+
+- name: publish
+  environment:
+    NGINX_VERSION: 1.20.2
+    DOCKERIO_USERNAME:
+      from_secret: username.docker.io
+    DOCKERIO_PASSWORD:
+      from_secret: password.docker.io
+  commands:
+   - podman tag nginx:build docker.io/gautada/podman:$NGINX_VERSION
+   - podman login --username=$DOCKERIO_USERNAME --password=$DOCKERIO_PASSWORD docker.io
+   - podman push docker.io/gautada/podman:$NGINX_VERSION
+  
+
