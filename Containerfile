@@ -16,8 +16,8 @@ RUN /sbin/apk add --no-cache nginx=$NGINX_PACKAGE
 
 ARG USER=nginx
 VOLUME /opt/%USER
+# && /usr/sbin/addgroup $USER \ -- nginix group is already created
 RUN /bin/mkdir -p /opt/$USER \
- && /usr/sbin/addgroup $USER \
  && /usr/sbin/adduser -D -s /bin/ash -G $USER $USER \
  && /usr/sbin/usermod -aG wheel $USER \
  && /bin/echo "$USER:$USER" | chpasswd \
