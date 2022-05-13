@@ -1,4 +1,4 @@
-ARG NGINX_VERSION=3.15.4
+ARG ALPINE_VERSION=3.15.4
 FROM docker.io/gautada/alpine:$ALPINE_VERSION
 
 LABEL source="https://github.com/gautada/nginx-container.git"
