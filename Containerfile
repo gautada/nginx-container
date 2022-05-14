@@ -1,5 +1,5 @@
 ARG ALPINE_VERSION=3.15.4
-FROM docker.io/gautada/alpine:$ALPINE_VERSION
+FROM gautada/alpine:$ALPINE_VERSION as final
 
 LABEL source="https://github.com/gautada/nginx-container.git"
 LABEL maintainer="Adam Gautier <adam@gautier.org>"
@@ -9,10 +9,15 @@ USER root
 WORKDIR /
 
 EXPOSE 80/tcp
+EXPOSE 443/tcp
 
 ARG NGINX_VERSION=1.20.2
 ARG NGINX_PACKAGE="$NGINX_VERSION"-r1
 RUN /sbin/apk add --no-cache nginx=$NGINX_PACKAGE
+
+RUN /bin/echo "%wheel         ALL = (ALL) NOPASSWD: /usr/sbin/nginx" >> /etc/sudoers
+
+COPY 10-entrypoint.sh /etc/entrypoint.d/10-entrypoint.sh
 
 ARG USER=nginx
 VOLUME /opt/%USER
