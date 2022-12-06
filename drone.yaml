@@ -9,21 +9,26 @@ platform:
 steps:
 - name: build
   environment:
-    ALPINE_VERSION: 3.15.4
-    NGINX_VERSION: 1.20.2
+    ALPINE_VERSION: "latest"
+    # NGINX_VERSION: 1.22.1
   commands:
-  - podman build --build-arg ALPINE_VERSION=$ALPINE_VERSION --build-arg NGINX_VERSION=$NGINX_VERSION --file Containerfile --label revision="$(git rev-parse HEAD)" --label version="$(date +%Y.%m.%d)" --no-cache --tag nginx:build .
+  - podman build --build-arg ALPINE_VERSION=$ALPINE_VERSION --file Containerfile --label revision="$(git rev-parse HEAD)" --label version="$(date +%Y.%m.%d)" --no-cache --tag nginx:build .
 
 - name: publish
   environment:
-    NGINX_VERSION: 1.20.2
+    CONTAINER_NAME: "nginx"
+    CONTAINER_VERSION: "1.22.1"
     DOCKERIO_USERNAME:
       from_secret: username.docker.io
     DOCKERIO_PASSWORD:
       from_secret: password.docker.io
   commands:
-   - podman tag nginx:build docker.io/gautada/nginx:$NGINX_VERSION
+   - podman tag $CONTAINER_NAME:drone docker.io/$DOCKERIO_USERNAME/$CONTAINER_NAME:$CONTAINER_VERSION
+   - podman tag $CONTAINER_NAME:drone docker.io/$DOCKERIO_USERNAME/$CONTAINER_NAME:latest
    - podman login --username=$DOCKERIO_USERNAME --password=$DOCKERIO_PASSWORD docker.io
-   - podman push docker.io/gautada/nginx:$NGINX_VERSION
-  
+   - podman push docker.io/$DOCKERIO_USERNAME/$CONTAINER_NAME:$CONTAINER_VERSION
+   - podman push docker.io/$DOCKERIO_USERNAME/$CONTAINER_NAME:latest
 
+trigger:
+  branch:
+  - main

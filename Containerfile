@@ -9,7 +9,7 @@ USER root
 WORKDIR /
 
 EXPOSE 80/tcp
-EXPOSE 443/tcp
+# EXPOSE 443/tcp
 
 ARG NGINX_VERSION=1.20.2
 ARG NGINX_PACKAGE="$NGINX_VERSION"-r1
@@ -19,11 +19,12 @@ RUN /sbin/apk add --no-cache nginx openssl curl wget git bash libressl
 
 RUN /bin/echo "%wheel         ALL = (ALL) NOPASSWD: /usr/sbin/nginx" >> /etc/sudoers
 
-COPY 10-entrypoint.sh /etc/entrypoint.d/10-entrypoint.sh
+RUN rm /etc/container/entrypoint
+COPY 10-entrypoint.sh /etc/container/entrypoint
 COPY http-default.conf /etc/nginx/http.d/default.conf
-COPY https-default.conf /etc/nginx/http.d/https-default.conf
+# COPY https-default.conf /etc/nginx/http.d/https-default.conf
 COPY index.html /home/nginx/www/index.html
-COPY pki/* /etc/nginx/pki/
+# COPY pki/* /etc/nginx/pki/
 
 RUN ln -sf /dev/stdout /var/log/nginx/access.log && ln -sf /dev/stderr /var/log/nginx/error.log
 
