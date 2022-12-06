@@ -20,7 +20,7 @@ RUN /sbin/apk add --no-cache nginx openssl curl wget git bash libressl
 RUN /bin/echo "%wheel         ALL = (ALL) NOPASSWD: /usr/sbin/nginx" >> /etc/sudoers
 
 RUN rm /etc/container/entrypoint
-COPY 10-entrypoint.sh /etc/container/entrypoint
+COPY entrypoint /etc/container/entrypoint
 COPY http-default.conf /etc/nginx/http.d/default.conf
 # COPY https-default.conf /etc/nginx/http.d/https-default.conf
 COPY index.html /home/nginx/www/index.html
