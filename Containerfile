@@ -30,16 +30,14 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log && ln -sf /dev/stderr /var/log/
 
 
 ARG USER=nginx
-VOLUME /opt/$USER
+# VOLUME /opt/$USER
 # nginix group & user is already created
 # && /usr/sbin/addgroup $USER \
 # && /usr/sbin/adduser -D -s /bin/ash -G $USER $USER \
-RUN /bin/mkdir -p /opt/$USER \
- && /usr/sbin/usermod -aG wheel $USER \
- && /bin/echo "$USER:$USER" | chpasswd \
- && /bin/chown $USER:$USER -R /opt/$USER
-
-
+RUN /bin/mkdir -p /opt/$USER
+RUN /usr/sbin/usermod -aG wheel $USER
+RUN /bin/echo "$USER:$USER" | chpasswd
+RUN /bin/chown $USER:$USER -R /opt/$USER
 RUN chown nginx:nginx -R /etc/nginx /home/nginx
 
 USER $USER
