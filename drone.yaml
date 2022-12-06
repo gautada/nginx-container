@@ -12,7 +12,7 @@ steps:
     ALPINE_VERSION: "latest"
     # NGINX_VERSION: 1.22.1
   commands:
-  - podman build --build-arg ALPINE_VERSION=$ALPINE_VERSION --file Containerfile --label revision="$(git rev-parse HEAD)" --label version="$(date +%Y.%m.%d)" --no-cache --tag nginx:build .
+  - podman build --build-arg ALPINE_VERSION=$ALPINE_VERSION --file Containerfile --label revision="$(git rev-parse HEAD)" --label version="$(date +%Y.%m.%d)" --no-cache --tag nginx:drone .
 
 - name: publish
   environment:
